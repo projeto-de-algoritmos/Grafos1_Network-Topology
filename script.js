@@ -51,7 +51,7 @@ const svg = d3.select("#networkSvg")
   .append("svg")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)
-  .attr("transform", `translate(${margin.left},${margin.top})`);
+  .attr("transform", `translate(${margin.left},${margin.top})`)
 
 d3.json("./computer_network.json").then(data => {
 
@@ -64,26 +64,34 @@ d3.json("./computer_network.json").then(data => {
 
   function isOnShortestPath(nodeId) {
     const nodeName = idToNameMap[nodeId];
-    if ( shortestPath.includes(nodeName) ) {
-      console.log(nodeName, nodeId)}
     return shortestPath.includes(nodeName);
   }
+  
   
   const link = svg.selectAll("line")
   .data(data.links)
   .enter()
   .append("line")
-  .style("stroke", d => isOnShortestPath(d.source) && isOnShortestPath(d.target) ? "red" : "#aaa")
+  .style("stroke", d => isOnShortestPath(d.source) && isOnShortestPath(d.target) ? "orange" : "#aaa")
   .style("stroke-width", 2)
   
+
   const node = svg.selectAll("circle")
     .data(data.nodes)
     .enter()
     .append("circle")
     .attr("r", 20)
-    .style("fill", d => isOnShortestPath(d.id) ? "red" : "#69b3a2");
+    .style("fill", d => isOnShortestPath(d.id) ? "orange" : "#69b3a2")
 
-    console.log(node)
+  const nodeText = svg.selectAll("text")
+    .data(data.nodes)
+    .enter()
+    .append("text")
+    .attr("x", d => d.x + 25) 
+    .attr("y", d => d.y - 25) 
+    .text(d => idToNameMap[d.id])
+  
+  
   const simulation = d3.forceSimulation(data.nodes)
     .force("link", d3.forceLink()
       .id(d => d.id)
@@ -103,13 +111,35 @@ d3.json("./computer_network.json").then(data => {
     node
       .attr("cx", d => d.x + 6)
       .attr("cy", d => d.y - 6)
+    nodeText
+      .attr("x", d => d.x)
+      .attr("y", d => d.y)
     }
 
 }).catch(error => {
   console.error("Erro carregar o grafo:", error);
 });
 
+const selectElement = document.getElementById('inputGroupSelect');
+const headerElement = document.getElementById('header');
+const instructionElement = document.getElementById('instruction')
+
+window.addEventListener('load', function() {
+  selectElement.selectedIndex = 0;
+});
 
 
+selectElement.addEventListener('change', function() {
+  if (this.value !== "") {
+    headerElement.textContent = this.options[this.selectedIndex].text;  
+  
+    switch (this.value) {
+      case "1":
+        instructionElement.textContent = "Escolha um vértice, a partir dele todos os outros vértices do componente conectado serão alcaçados. Para escolher basta clicar no vertice";
+        break;
+      default:
+        instructionElement.textContent = "Escolha dois vértices, o primeiro será o source e o segundo o destination. Para escolher basta clicar no vertice.";
+    }
+  }
+})
 
-// 
