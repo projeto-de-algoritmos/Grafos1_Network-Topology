@@ -7,11 +7,13 @@ function graphRenderer() {
     const width = 430 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
+    let selectedNodes = []
+
     const svg = d3.select("#networkSvg")
-    .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .attr("transform", `translate(${margin.left},${margin.top})`)
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .attr("transform", `translate(${margin.left},${margin.top})`)
 
     d3.json("data/computer_topology.json").then(data => {
 
@@ -41,8 +43,10 @@ function graphRenderer() {
             .enter()
             .append("circle")
             .attr("r", 20)
+            .attr("id", d => `node-${d.id}`)
             .style("fill", d => isOnShortestPath(d.id) ? "orange" : "#69b3a2")
-
+            .on("click", d => handleNodeClick(d));
+        
         const nodeText = svg.selectAll("text")
             .data(data.nodes)
             .enter()
@@ -74,6 +78,43 @@ function graphRenderer() {
             nodeText
             .attr("x", d => d.x)
             .attr("y", d => d.y)
+        }
+
+        function handleNodeClick(clickedNode) {
+            
+            
+            const selectedOption =  document.getElementById("inputGroupSelect").value;
+            
+            switch (selectedOption) {
+                case "1":
+                    if(selectedNodes.includes(clickedNode.target.id)) {
+                        selectedNodes.pop(clickedNode.target.id)
+                        console.log(selectedNodes)
+                        d3.select("#"+clickedNode.target.id).style("fill", "#69b3a2")
+                    } else {
+                        if (selectedNodes.length + 1 <= 1) {
+                            selectedNodes.push(clickedNode.target.id)
+                            console.log(selectedNodes)
+                            d3.select("#"+clickedNode.target.id).style("fill", "orange")
+                        } else console.log("Não pode adicionar mais")
+                    }                        
+                    break;
+                case "2":
+                    if(selectedNodes.includes(clickedNode.target.id)) {
+                        selectedNodes.pop(clickedNode.target.id)
+                        console.log(selectedNodes)
+                        d3.select("#"+clickedNode.target.id).style("fill", "#69b3a2")
+                    } else {
+                        if (selectedNodes.length <= 1) {
+                            selectedNodes.push(clickedNode.target.id)
+                            console.log(selectedNodes)
+                            d3.select("#"+clickedNode.target.id).style("fill", "orange")
+                        } else console.log("Não pode adicionar mais")
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
     }).catch(error => {
