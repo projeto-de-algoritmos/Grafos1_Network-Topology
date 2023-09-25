@@ -22,5 +22,28 @@ function bfsShortestPath(graph, source, destination) {
     return [];
 }
 
-export  { bfsShortestPath };
+
+function bfs(graph, source) {
+    const queue = [source];
+    const visited = [];
+    
+    while (queue.length) {
+        const vertex = queue.shift();
+
+        if (!visited.includes(vertex)) {
+            visited.push(vertex);
+
+            for (const neighbor of graph[vertex]) {
+                if (!visited.includes(neighbor)) {
+                    queue.push(neighbor);
+                }
+            }
+        }
+    }
+
+    return visited;
+}
+
+
+export  { bfsShortestPath, bfs };
 
