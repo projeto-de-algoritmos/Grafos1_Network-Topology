@@ -74,20 +74,57 @@ function createGraph() {
 
 function handleNodeClick(clickedNode) {
     const selectedOption = document.getElementById("inputGroupSelect").value;
+    const existAlert = document.querySelector(".alert");
 
-    if (selectedNodes.includes(clickedNode.target.id)) {
-        selectedNodes = selectedNodes.filter(nodeId => nodeId !== clickedNode.target.id);
-        d3.select("#" + clickedNode.target.id).style("fill", "#69b3a2");
-    } else {
-        if (selectedNodes.length < 2) {
-            selectedNodes.push(clickedNode.target.id);
-            d3.select("#" + clickedNode.target.id).style("fill", "orange");
-        } else {
-            console.log("Não pode adicionar mais");
-        }
+    
+    switch (selectedOption) {
+        case "1":
+            if(selectedNodes.includes(clickedNode.target.id)) {
+                selectedNodes.pop(clickedNode.target.id)
+                console.log(selectedNodes)
+                d3.select("#"+clickedNode.target.id).style("fill", "#69b3a2")
+            } else {
+                if(!existAlert) {
+                    if (selectedNodes.length + 1 <= 1) {
+                        selectedNodes.push(clickedNode.target.id)
+                        d3.select("#"+clickedNode.target.id).style("fill", "orange")
+                    } else {
+                        const alertDiv = document.createElement("div");
+                        alertDiv.classList.add("alert", "alert-warning", "alert-dismissible", "fade", "show");
+                        alertDiv.innerHTML = `
+                            Não pode adicionar mais.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        `;
+                        document.getElementById("alert-container").appendChild(alertDiv);
+                    }
+                }
+                
+            }                        
+            break;
+        case "2":
+            if(selectedNodes.includes(clickedNode.target.id)) {
+                selectedNodes.pop(clickedNode.target.id)
+                d3.select("#"+clickedNode.target.id).style("fill", "#69b3a2")
+            } else {
+                if (selectedNodes.length <= 1) {
+                    selectedNodes.push(clickedNode.target.id)
+                    d3.select("#"+clickedNode.target.id).style("fill", "orange")
+                } else {
+                    if(!existAlert){
+                        const alertDiv = document.createElement("div");
+                    alertDiv.classList.add("alert", "alert-warning", "alert-dismissible", "fade", "show");
+                    alertDiv.innerHTML = `
+                        Não pode adicionar mais.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    `;
+                    document.getElementById("alert-container").appendChild(alertDiv);
+                    }
+                }
+            }
+            break;
+        default:
+            break;
     }
-
-    return selectedNodes;
 }
 
 function updateGraphUnicast(sourceNode, destinationNode) {
@@ -105,7 +142,7 @@ function updateGraph(path) {
         setTimeout(function () {
             console.log(nodeId);
             d3.select("#" + nodeId).style("fill", "orange");
-        }, i * 1000);
+        }, i * 500);
     });
 }
 
