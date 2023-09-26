@@ -7,9 +7,7 @@ function bfsShortestPath(graph, source, destination) {
 
         if (!visited.has(vertex)) {
             visited.add(vertex);
-
             if (vertex === destination) return path;
-
             for (const neighbor of graph[vertex]) {
                 if (!visited.has(neighbor)) {
                     const newPath = [...path, neighbor];
@@ -29,10 +27,8 @@ function bfs(graph, source) {
     
     while (queue.length) {
         const vertex = queue.shift();
-
         if (!visited.includes(vertex)) {
             visited.push(vertex);
-
             for (const neighbor of graph[vertex]) {
                 if (!visited.includes(neighbor)) {
                     queue.push(neighbor);

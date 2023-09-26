@@ -81,7 +81,6 @@ function handleNodeClick(clickedNode) {
         case "1":
             if(selectedNodes.includes(clickedNode.target.id)) {
                 selectedNodes.pop(clickedNode.target.id)
-                console.log(selectedNodes)
                 d3.select("#"+clickedNode.target.id).style("fill", "#69b3a2")
             } else {
                 if(!existAlert) {
@@ -140,9 +139,8 @@ function updateGraphBroadcast(sourceNode) {
 function updateGraph(path) {
     path.forEach((nodeId, i) => {
         setTimeout(function () {
-            console.log(nodeId);
             d3.select("#" + nodeId).style("fill", "orange");
-        }, i * 500);
+        }, i * 300);
     });
 }
 
