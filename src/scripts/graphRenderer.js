@@ -1,17 +1,15 @@
 import { graph } from '../graphs/graph.js';
 import { bfsShortestPath, bfs } from './bfs.js';
 
-const margin = { top: 0, right: 0, bottom: 0, left: 0 };
-const width = 430 - margin.left - margin.right;
-const height = 400 - margin.top - margin.bottom;
+const width = 430;
+const height = 400;
 
 let selectedNodes = [];
 
 const svg = d3.select("#networkSvg")
     .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .attr("transform", `translate(${margin.left},${margin.top})`);
+    .attr("width", width)
+    .attr("height", height)
 
 function createGraph() {
     const idToNameMap = {};
@@ -35,15 +33,22 @@ function createGraph() {
             .attr("r", 20)
             .attr("id", d => `${d.name}`)
             .style("fill", "#69b3a2")
-            .on("click", d => handleNodeClick(d));
-
+            .on("click", d => handleNodeClick(d))
+            .on("mouseover", function() {
+                d3.select(this).style("cursor", "pointer"); 
+              })
         const nodeText = svg.selectAll("text")
             .data(data.nodes)
             .enter()
             .append("text")
             .attr("x", d => d.x + 25)
             .attr("y", d => d.y - 25)
-            .text(d => idToNameMap[d.id]);
+            .text(d => idToNameMap[d.id])
+            .on("click", d => handleNodeClick(d))
+            .on("mouseover", function() {
+                d3.select(this).style("cursor", "pointer"); 
+              });
+            
 
         const simulation = d3.forceSimulation(data.nodes)
             .force("link", d3.forceLink()
