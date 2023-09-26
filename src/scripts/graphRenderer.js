@@ -36,7 +36,8 @@ function createGraph() {
             .on("click", d => handleNodeClick(d))
             .on("mouseover", function() {
                 d3.select(this).style("cursor", "pointer"); 
-              })
+              });
+
         const nodeText = svg.selectAll("text")
             .data(data.nodes)
             .enter()
@@ -44,7 +45,6 @@ function createGraph() {
             .attr("x", d => d.x + 25)
             .attr("y", d => d.y - 25)
             .text(d => idToNameMap[d.id])
-            .on("click", d => handleNodeClick(d))
             .on("mouseover", function() {
                 d3.select(this).style("cursor", "pointer"); 
               });
